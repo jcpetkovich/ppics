@@ -1,0 +1,27 @@
+NAME
+    ppics.pl - Pretty print ics events from file.
+
+SYNOPSIS
+    ppics.pl [options] args
+
+          -h --help            Print this help documentation.
+          -f --file filespec   Pick the file to process
+
+DESCRIPTION
+    ppics.pl prints out ics files as specified in %printing_rules.
+
+    Depends on Data::ICal and Moose.
+
+AUTHOR
+    Jean-Christophe Petkovich, <me@jcpetkovich.com>
+
+COPYRIGHT AND LICENSE
+    Copyright (C) 2012 by Jean-Christophe Petkovich
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself, either Perl version 5.8.2 or, at
+    your option, any later version of Perl 5 you may have available.
+
+BUGS
+    None reported... yet.
+
