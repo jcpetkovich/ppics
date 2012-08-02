@@ -27,10 +27,12 @@ has inline => (
 sub format_string {
     my $self    = shift;
     my ($value) = @_;
-    my $str     = $self->header . "\n";
+    my $str;
+
+    $str  = $self->header . "\n" if $self->header;
     $str .= $self->inline . $value . "\n";
-    $str .= $self->footer . "\n";
-    return $str;
+    $str .= $self->footer . "\n" if $self->footer;
+    return $str . "\n";
 }
 
 # Main
@@ -100,9 +102,6 @@ for my $event (@events) {
             print $printing_rules{$event_value}->format_string($_);
         }
     }
-
-    print Dumper \%calendar_values;
-    print Dumper \%event_values;
 }
 
 __END__
