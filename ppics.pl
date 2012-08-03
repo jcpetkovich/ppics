@@ -6,30 +6,27 @@
 
 # Field Formatter Class
 package FieldFormatter;
-use Moose;
+use Class::Accessor "antlers";
 
 has header => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => ''
+    is  => 'rw',
+    isa => 'Str',
 );
 has footer => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => ""
+    is  => 'rw',
+    isa => 'Str',
 );
 has inline => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => ""
+    is  => 'rw',
+    isa => 'Str',
 );
 
 sub format_string {
-    my $self    = shift;
+    my $self = shift;
     my ($value) = @_;
     my $str;
 
-    $str  = $self->header . "\n" if $self->header;
+    $str = $self->header . "\n" if $self->header;
     $str .= $self->inline . $value . "\n";
     $str .= $self->footer . "\n" if $self->footer;
     return $str . "\n";
@@ -46,16 +43,22 @@ use Getopt::Long qw( :config auto_help );
 
 # =============Customization==============
 # Customize printing rules here.
+my %defaults = (
+    inline => '',
+    header => '',
+    footer => ''
+);
+
 my %printing_rules = (
     summary => FieldFormatter->new(
-        header => "------------------Summary-----------------"
+        { %defaults, header => "------------------Summary-----------------" }
     ),
-    organizer   => FieldFormatter->new( inline => 'Organizer: ' ),
-    location    => FieldFormatter->new( inline => 'Location: ' ),
+    organizer => FieldFormatter->new( { %defaults, inline => 'Organizer: ' } ),
+    location  => FieldFormatter->new( { %defaults, inline => 'Location: ' } ),
     description => FieldFormatter->new(
-        header => "----------------Description---------------"
+        { %defaults, header => "----------------Description---------------" }
     ),
-    method => FieldFormatter->new( inline => 'Type: ' )
+    method => FieldFormatter->new( { %defaults, inline => 'Type: ' } )
 );
 
 # Add calendar properties that you want printed here
