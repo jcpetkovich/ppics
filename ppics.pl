@@ -6,30 +6,41 @@
 
 # Field Formatter Class
 package FieldFormatter;
-use Class::Accessor "antlers";
+use Moose;
 
 has header => (
-    is  => 'rw',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'Str',
+    default => ''
 );
 has footer => (
-    is  => 'rw',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'Str',
+    default => "\n"
 );
 has inline => (
-    is  => 'rw',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'Str',
+    default => ""
+);
+has 'preprocess' => (
+    is      => 'rw',
+    isa     => 'CodeRef',
+    default => sub {
+        sub { $_[0] }
+    }
 );
 
 sub format_string {
     my $self = shift;
     my ($value) = @_;
+    $value = $self->preprocess->($value);
     my $str;
 
     $str = $self->header . "\n" if $self->header;
     $str .= $self->inline . $value . "\n";
-    $str .= $self->footer . "\n" if $self->footer;
-    return $str . "\n";
+    $str .= $self->footer if $self->footer;
+    return $str;
 }
 
 # Main
@@ -39,33 +50,52 @@ use strict;
 use warnings;
 use Data::Dumper;
 use Data::ICal;
+use Date::Manip;
 use Getopt::Long qw( :config auto_help );
 
 # =============Customization==============
 # Customize printing rules here.
-my %defaults = (
-    inline => '',
-    header => '',
-    footer => ''
-);
-
 my %printing_rules = (
     summary => FieldFormatter->new(
-        { %defaults, header => "------------------Summary-----------------" }
+        header => "------------------Summary-----------------"
     ),
-    organizer => FieldFormatter->new( { %defaults, inline => 'Organizer: ' } ),
-    location  => FieldFormatter->new( { %defaults, inline => 'Location: ' } ),
+    location    => FieldFormatter->new( inline => 'Location: ' ),
     description => FieldFormatter->new(
-        { %defaults, header => "----------------Description---------------" }
+        header => "----------------Description---------------"
     ),
-    method => FieldFormatter->new( { %defaults, inline => 'Type: ' } )
+    method    => FieldFormatter->new( inline => 'Type: ', ),
+    organizer => FieldFormatter->new( inline => 'Organizer: ', footer => '' ),
+    dtstamp => FieldFormatter->new(
+        inline     => "Recieved ",
+        preprocess => \&processtime
+    ),
+    dtstart => FieldFormatter->new(
+        header => "Event time:",
+        inline     => "Start = ",
+        preprocess => \&processtime,
+        footer     => ''
+    ),
+    dtend => FieldFormatter->new(
+        inline     => "End = ",
+        preprocess => \&processtime
+    )
 );
+
+sub processtime {
+    my ($date) = shift;
+
+    my $manip = Date::Manip::Date->new;
+
+    $manip->parse($date);
+    return ( $manip->printf("%T on %b %e, %Y") );
+}
 
 # Add calendar properties that you want printed here
 my @calendar_values = qw( method );
 
 # Add event properties that you want printed here
-my @event_values = qw( organizer summary location description );
+my @event_values =
+  qw( organizer dtstamp dtstart dtend summary location description );
 
 # ============End Customization===========
 
