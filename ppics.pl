@@ -56,6 +56,10 @@ use Getopt::Long qw( :config auto_help );
 # =============Customization==============
 # Customize printing rules here.
 my %printing_rules = (
+    organizer => FieldFormatter->new(
+        inline => 'Organizer: ',
+        footer => "\nAttendees:\n"
+    ),
     summary => FieldFormatter->new(
         header => "------------------Summary-----------------"
     ),
@@ -63,11 +67,9 @@ my %printing_rules = (
     description => FieldFormatter->new(
         header => "----------------Description---------------"
     ),
-    method    => FieldFormatter->new( inline => 'Type: ', ),
-    organizer => FieldFormatter->new(
-        inline => 'Organizer: ',
-        footer => "\nAttendees:\n"
-    ),
+    method    => FieldFormatter->new(
+        header => "##########################################",
+        inline => 'Type: ', ),
     dtstamp => FieldFormatter->new(
         inline     => "\nRecieved ",
         preprocess => \&processtime
