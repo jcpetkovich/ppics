@@ -56,20 +56,15 @@ use Getopt::Long qw( :config auto_help );
 # =============Customization==============
 # Customize printing rules here.
 my %printing_rules = (
+    method => FieldFormatter->new(
+        header => "##########################################",
+        inline => 'Type: ',
+    ),
     organizer => FieldFormatter->new(
         inline => 'Organizer: ',
         footer => "\nAttendees:\n"
     ),
-    summary => FieldFormatter->new(
-        header => "------------------Summary-----------------"
-    ),
-    location    => FieldFormatter->new( inline => 'Location: ' ),
-    description => FieldFormatter->new(
-        header => "----------------Description---------------"
-    ),
-    method    => FieldFormatter->new(
-        header => "##########################################",
-        inline => 'Type: ', ),
+    attendee => FieldFormatter->new( footer => '' ),
     dtstamp => FieldFormatter->new(
         inline     => "\nRecieved ",
         preprocess => \&processtime
@@ -84,7 +79,13 @@ my %printing_rules = (
         inline     => "End = ",
         preprocess => \&processtime
     ),
-    attendee => FieldFormatter->new( footer => '' )
+    summary => FieldFormatter->new(
+        header => "------------------Summary-----------------"
+    ),
+    location    => FieldFormatter->new( inline => 'Location: ' ),
+    description => FieldFormatter->new(
+        header => "----------------Description---------------"
+    ),
 );
 
 sub processtime {
