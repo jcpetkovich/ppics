@@ -64,13 +64,16 @@ my %printing_rules = (
         header => "----------------Description---------------"
     ),
     method    => FieldFormatter->new( inline => 'Type: ', ),
-    organizer => FieldFormatter->new( inline => 'Organizer: ', footer => '' ),
+    organizer => FieldFormatter->new(
+        inline => 'Organizer: ',
+        footer => "\n\nAttendies:\n"
+    ),
     dtstamp => FieldFormatter->new(
-        inline     => "Recieved ",
+        inline     => "\nRecieved ",
         preprocess => \&processtime
     ),
     dtstart => FieldFormatter->new(
-        header => "Event time:",
+        header     => "Event time:",
         inline     => "Start = ",
         preprocess => \&processtime,
         footer     => ''
@@ -78,7 +81,8 @@ my %printing_rules = (
     dtend => FieldFormatter->new(
         inline     => "End = ",
         preprocess => \&processtime
-    )
+    ),
+    attendee => FieldFormatter->new( footer => '' )
 );
 
 sub processtime {
@@ -95,7 +99,7 @@ my @calendar_values = qw( method );
 
 # Add event properties that you want printed here
 my @event_values =
-  qw( organizer dtstamp dtstart dtend summary location description );
+  qw( organizer attendee dtstamp dtstart dtend summary location description );
 
 # ============End Customization===========
 
