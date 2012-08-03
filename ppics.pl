@@ -66,7 +66,7 @@ my %printing_rules = (
     method    => FieldFormatter->new( inline => 'Type: ', ),
     organizer => FieldFormatter->new(
         inline => 'Organizer: ',
-        footer => "\n\nAttendies:\n"
+        footer => "\nAttendees:\n"
     ),
     dtstamp => FieldFormatter->new(
         inline     => "\nRecieved ",
